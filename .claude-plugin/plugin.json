@@ -1,0 +1,10 @@
+{
+  "name": "ai-assistant",
+  "version": "0.1.0",
+  "description": "Role-based development workflow for Claude Code: planner, orchestrator, developer, verifier and reviewer, with a human approval gate after every step.",
+  "license": "MIT",
+  "author": {
+    "name": "Grubor, Ivan",
+    "url": "https://github.com/GruborIvan"
+  }
+}
