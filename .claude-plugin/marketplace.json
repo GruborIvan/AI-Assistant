@@ -1,0 +1,17 @@
+{
+  "name": "ai-assistant",
+  "owner": {
+    "name": "Ivan Grubor",
+    "url": "https://github.com/GruborIvan"
+  },
+  "metadata": {
+    "description": "Plugins for a role-based, human-gated development workflow in Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "ai-assistant",
+      "source": "./",
+      "description": "Role-based development workflow: planner, orchestrator, developer, verifier and reviewer, with a human approval gate after every step."
+    }
+  ]
+}

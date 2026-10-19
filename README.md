@@ -45,7 +45,16 @@ Its output follows [the plan template](skills/planner/templates/plan.md).
 
 ## Installation
 
-Try it for a single session without installing:
+In Claude Code, add this repository as a plugin marketplace and install the plugin:
+
+```
+/plugin marketplace add GruborIvan/AI-Assistant
+/plugin install ai-assistant@ai-assistant
+```
+
+Pull later changes with `/plugin marketplace update ai-assistant`.
+
+To try a local copy for a single session without installing (useful while changing the plugin):
 
 ```bash
 claude --plugin-dir path/to/AI-Assistant
