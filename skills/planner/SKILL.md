@@ -147,7 +147,8 @@ Do not paste the whole plan into the chat.
 Apply the user's changes to the file. When the user approves:
 
 - set the plan's **Status** to `Approved` and add the approval to the **Approvals** log
-- tell the user the plan is ready for the orchestrator, which runs it one step at a time
+- tell the user the plan is ready for the orchestrator (`/ai-assistant:orchestrator`), which runs
+  it one step at a time and stops for their approval after each
 
 ## Rules
 

@@ -17,7 +17,7 @@ reviewed by a person, and checked against what was actually built.
 | Role | Type | Job | Status |
 |---|---|---|---|
 | **Planner** | skill | Leads a focused requirements interview and writes a plan of small, verifiable steps | ✅ available |
-| **Orchestrator** | skill | Runs the plan one step at a time and stops for approval after each | planned |
+| **Orchestrator** | skill | Runs the plan one step at a time and stops for approval after each | ✅ available |
 | **Developer** | skill | Implements exactly one step, in the project's existing style | planned |
 | **Verifier** | subagent | Proves a step works: build, tests, running the app | planned |
 | **Reviewer** | subagent | Reviews each step's diff against the plan with fresh eyes | planned |
@@ -42,6 +42,24 @@ The planner leads the conversation instead of waiting for instructions:
   nice-to-haves are parked.
 
 Its output follows [the plan template](skills/planner/templates/plan.md).
+
+## The orchestrator
+
+The orchestrator runs an approved plan and never gets ahead of you:
+
+- **One step at a time.** It implements a step, verifies it with evidence, has it reviewed, then
+  stops and presents a short [step report](skills/orchestrator/templates/step-report.md).
+- **You approve every step.** Approving commits that step (one commit per step, never pushed)
+  and starts the next. You can also ask for fixes, redo the step, or change the plan.
+- **The plan file is its memory.** Step markers (`[ ]` `[~]` `[?]` `[x]`) and an approvals log
+  are kept current, so an interrupted session resumes exactly where it stopped.
+- **It stays honest about what it checked.** Checks only a person can do (a desktop UI, a
+  printout) appear as exact manual instructions. Until the reviewer role exists, the report
+  says the review was not run, instead of passing off a self-check as a review.
+- **It stops instead of improvising.** If the code doesn't match what the plan assumed, or a fix
+  fails twice, it reports back rather than building something you didn't approve.
+
+Start it with `/ai-assistant:orchestrator`, or say "start the plan" once a plan is approved.
 
 ## Installation
 
