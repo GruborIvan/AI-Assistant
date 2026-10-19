@@ -83,8 +83,17 @@ returns one of three verdicts:
   do not pretend to do it. Put it in the step report as an exact manual check: what to open,
   what to do, what to expect.
 
-**Review.** Hand the step's diff to the **reviewer**, together with the step text and the plan's
-constraints. The reviewer judges this step's changes, not the whole codebase.
+**Review.** Once verification passes, call the **reviewer** subagent. The reviewer judges this
+step's changes, not the whole codebase. Its value is independence, so protect it:
+
+- **A new invocation every time.** Start a fresh reviewer for each review, including
+  re-reviews after a fix. Never continue an earlier reviewer's conversation, and never review
+  inline in this session.
+- **Facts, not the author's reasoning.** Give it the plan file path and the step number, and on
+  a re-review the previous findings to check. Do **not** pass the developer's note, your own
+  explanation of the changes, or the conversation. It reads the diff itself.
+- **Its findings go into the report as given.** Do not downgrade a 🔴 to make the step pass. If
+  you believe a finding is wrong, say so in the report next to it and let the user decide.
 
 **Fix loop.** If verification returns `FAIL`, or the review has a 🔴 blocker, send it back to
 the developer with the exact failure and verify again. **At most two fix attempts.** If it still
@@ -137,7 +146,7 @@ When every step is `[x]`:
 |---|---|---|
 | **Developer** | The `developer` skill (`ai-assistant:developer`), in this session so it keeps the plan and conversation context. Pass the developer's "For the verifier" notes on to the verifier | Implement the step yourself, holding to the same rule: the step is the whole scope |
 | **Verifier** | The `verifier` subagent (`ai-assistant:verifier`), so build and test output stays out of the conversation. Use its verdict and evidence in the step report as given. Do not upgrade a `FAIL` or `BLOCKED` | Run the step's **Verify** yourself and include the evidence in the report |
-| **Reviewer** | Its subagent, which sees the diff without your reasoning | Say **"Review: not run, no reviewer available"** in the report. Do not review your own work and present it as a review. A self-check is not independent, and the report must not imply that it is |
+| **Reviewer** | The `reviewer` subagent (`ai-assistant:reviewer`): a fresh context on a different model than the one that wrote the code, so it does not share the author's blind spots | Say **"Review: not run, no reviewer available"** in the report. Do not review your own work and present it as a review. A self-check is not independent, and the report must not imply that it is |
 
 ## Focus
 

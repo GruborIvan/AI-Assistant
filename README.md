@@ -20,7 +20,7 @@ reviewed by a person, and checked against what was actually built.
 | **Orchestrator** | skill | Runs the plan one step at a time and stops for approval after each | ✅ available |
 | **Developer** | skill | Implements exactly one step, in the project's existing style | ✅ available |
 | **Verifier** | subagent | Proves a step works: build, tests, running the app | ✅ available |
-| **Reviewer** | subagent | Reviews each step's diff against the plan with fresh eyes | planned |
+| **Reviewer** | subagent | Reviews each step's diff against the plan with fresh eyes | ✅ available |
 
 The orchestrator and developer run in your main session because they need its context. The
 verifier and reviewer run as subagents: the verifier keeps noisy build and test output out of the
@@ -54,8 +54,8 @@ The orchestrator runs an approved plan and never gets ahead of you:
 - **The plan file is its memory.** Step markers (`[ ]` `[~]` `[?]` `[x]`) and an approvals log
   are kept current, so an interrupted session resumes exactly where it stopped.
 - **It stays honest about what it checked.** Checks only a person can do (a desktop UI, a
-  printout) appear as exact manual instructions. Until the reviewer role exists, the report
-  says the review was not run, instead of passing off a self-check as a review.
+  printout) appear as exact manual instructions. If the reviewer can't run, the report says
+  the review was not run, instead of passing off a self-check as a review.
 - **It stops instead of improvising.** If the code doesn't match what the plan assumed, or a fix
   fails twice, it reports back rather than building something you didn't approve.
 
@@ -99,6 +99,29 @@ it can't edit code: it only runs things and reports.
   instructions for you.
 
 It reads the project's build, test and run commands from `CLAUDE.md`, so it works for any stack.
+
+## The reviewer
+
+The reviewer is a subagent that reads each step's diff after it passes verification. It is
+built to be independent of the code's author:
+
+- **A fresh context, every time.** Each review is a new subagent that has never seen the
+  conversation, including re-reviews after a fix.
+- **A different model.** It runs on Sonnet, while the code is usually written by the main
+  session on Opus. A different model brings different blind spots, so it catches mistakes the
+  author's model would read past.
+- **Facts, not the author's reasoning.** It gets the plan and the step number, never the
+  developer's explanation. If code only makes sense with an explanation the code doesn't
+  contain, that is a finding.
+- **Findings with scenarios.** Each blocker or important finding names the file and line, the
+  concrete situation where it goes wrong, and a fix. An empty review is a valid outcome.
+- **Respects settled decisions.** It reads `CLAUDE.md`, your project skills and the plan, and
+  doesn't relitigate what's already been decided.
+
+**Choosing the reviewer's model.** The point is that the reviewer runs on a different model
+than your main session. If your main session runs on Sonnet, change `model: sonnet` to
+`model: opus` in [agents/reviewer.md](agents/reviewer.md). If you have usage credits for Fable,
+`model: fable` gives the strongest review.
 
 ## Installation
 
