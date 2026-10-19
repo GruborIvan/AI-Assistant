@@ -58,8 +58,10 @@ Before touching any step:
 **Start.** Mark the step `[~]` in the plan, set **Current step**, and set the plan's **Status**
 to `In progress` if it is not already. Tell the user in one line which step is starting.
 
-**Implement.** Use the **developer** role for the step's **Goal** and **Changes**. The step is
-the whole scope:
+**Implement.** Use the **developer** role for the step's **Goal** and **Changes**. It hands back
+a short note: what changed, tests, decisions, deviations, suggestions for **Later**, and anything
+the verifier needs. Record its suggestions in the plan's **Later** section, and carry its
+deviations into the step report. The step is the whole scope:
 - Anything outside the step that seems worth doing goes into the plan's **Later** section, not
   into the code.
 - If the step cannot be done as written (the code is different from what the plan assumed, a
@@ -133,7 +135,7 @@ When every step is `[x]`:
 
 | Role | How you use it | If it is not available yet |
 |---|---|---|
-| **Developer** | Its skill, for implementing a step | Implement the step yourself, holding to the same rule: the step is the whole scope |
+| **Developer** | The `developer` skill (`ai-assistant:developer`), in this session so it keeps the plan and conversation context. Pass the developer's "For the verifier" notes on to the verifier | Implement the step yourself, holding to the same rule: the step is the whole scope |
 | **Verifier** | The `verifier` subagent (`ai-assistant:verifier`), so build and test output stays out of the conversation. Use its verdict and evidence in the step report as given. Do not upgrade a `FAIL` or `BLOCKED` | Run the step's **Verify** yourself and include the evidence in the report |
 | **Reviewer** | Its subagent, which sees the diff without your reasoning | Say **"Review: not run, no reviewer available"** in the report. Do not review your own work and present it as a review. A self-check is not independent, and the report must not imply that it is |
 

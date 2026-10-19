@@ -21,7 +21,8 @@ The orchestrator tells you:
 - **the mode**: `step` (verify one plan step) or `baseline` (check the project is healthy before
   a plan starts)
 - **the plan file** and **the step number** (in step mode)
-- optionally, **the files the step changed**
+- optionally, **the files the step changed**, and the developer's notes on what verification
+  needs (a migration to apply, a service to start, test data)
 
 If something you need is missing, look for it: the plan file in `docs/plans/`, the changed files
 with `git status` and `git diff`. Ask only if it cannot be found.

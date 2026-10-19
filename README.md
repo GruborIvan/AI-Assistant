@@ -18,7 +18,7 @@ reviewed by a person, and checked against what was actually built.
 |---|---|---|---|
 | **Planner** | skill | Leads a focused requirements interview and writes a plan of small, verifiable steps | ✅ available |
 | **Orchestrator** | skill | Runs the plan one step at a time and stops for approval after each | ✅ available |
-| **Developer** | skill | Implements exactly one step, in the project's existing style | planned |
+| **Developer** | skill | Implements exactly one step, in the project's existing style | ✅ available |
 | **Verifier** | subagent | Proves a step works: build, tests, running the app | ✅ available |
 | **Reviewer** | subagent | Reviews each step's diff against the plan with fresh eyes | planned |
 
@@ -60,6 +60,26 @@ The orchestrator runs an approved plan and never gets ahead of you:
   fails twice, it reports back rather than building something you didn't approve.
 
 Start it with `/ai-assistant:orchestrator`, or say "start the plan" once a plan is approved.
+
+## The developer
+
+The developer implements one step at a time, for three readers: the verifier, the reviewer, and
+you at the gate.
+
+- **Studies before writing.** It finds the closest existing example in your codebase and
+  matches its shape, naming, error handling and test style. Your codebase's conventions win over
+  its own preferences.
+- **The step is the whole scope.** No drive-by refactors or reformatting. Things worth doing
+  later come back as suggestions and land in the plan's *Later* section.
+- **Tests for logic that decides things,** following your existing test style. For important
+  rules, it briefly breaks the code to prove the test actually fails.
+- **Never weakens a check to get green.** In fix mode it fixes the cause. If it thinks a test is
+  wrong, it says so openly instead of deleting it.
+- **Stops instead of improvising.** If the step can't be done as written, it reports back with a
+  proposal.
+
+It runs in your main session so it keeps the plan's context, and it hands back a short note of
+what changed, what it decided, and what the verifier needs to know.
 
 ## The verifier
 

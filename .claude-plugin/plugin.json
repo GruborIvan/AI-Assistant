@@ -1,6 +1,6 @@
 {
   "name": "ai-assistant",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Role-based development workflow for Claude Code: planner, orchestrator, developer, verifier and reviewer, with a human approval gate after every step.",
   "license": "MIT",
   "author": {
