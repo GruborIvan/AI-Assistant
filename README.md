@@ -19,7 +19,7 @@ reviewed by a person, and checked against what was actually built.
 | **Planner** | skill | Leads a focused requirements interview and writes a plan of small, verifiable steps | ✅ available |
 | **Orchestrator** | skill | Runs the plan one step at a time and stops for approval after each | ✅ available |
 | **Developer** | skill | Implements exactly one step, in the project's existing style | planned |
-| **Verifier** | subagent | Proves a step works: build, tests, running the app | planned |
+| **Verifier** | subagent | Proves a step works: build, tests, running the app | ✅ available |
 | **Reviewer** | subagent | Reviews each step's diff against the plan with fresh eyes | planned |
 
 The orchestrator and developer run in your main session because they need its context. The
@@ -60,6 +60,25 @@ The orchestrator runs an approved plan and never gets ahead of you:
   fails twice, it reports back rather than building something you didn't approve.
 
 Start it with `/ai-assistant:orchestrator`, or say "start the plan" once a plan is approved.
+
+## The verifier
+
+The verifier is a subagent the orchestrator calls after each step, and once before a plan starts
+to check the project is healthy. Its build and test output stays out of your conversation, and
+it can't edit code: it only runs things and reports.
+
+- **Evidence, not opinions.** It reports build results, test counts, and the actual values the
+  step's checks returned, not just "200 OK".
+- **Three verdicts.** `PASS`, `FAIL` (the code is wrong, so it goes back for a fix), or
+  `BLOCKED` (something outside the code, like a database that's down, which goes to you).
+- **No quiet substitutions.** A check it can't run is reported as not run, never swapped for an
+  easier one without saying so.
+- **Knows how builds lie.** A locked executable can make tests run against the old binary, and a
+  filter in a pipe can hide a failing exit code. It checks for both.
+- **Leaves human checks to humans.** Desktop UI, printouts and devices come back as exact
+  instructions for you.
+
+It reads the project's build, test and run commands from `CLAUDE.md`, so it works for any stack.
 
 ## Installation
 

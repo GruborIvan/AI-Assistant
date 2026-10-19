@@ -12,7 +12,7 @@ to wonder. Replace everything in <angle brackets>.
 - `<file>`: <one line on what and why>
 - `<file>`: <...>
 
-**Verification**
+**Verification:** <PASS | FAIL | BLOCKED, as the verifier reported it>
 - <command or check>: <result with evidence, e.g. "build OK", "18/18 tests passed">
 - <...>
 

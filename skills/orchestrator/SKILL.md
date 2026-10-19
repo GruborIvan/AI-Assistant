@@ -46,8 +46,10 @@ Before touching any step:
    it impossible to tell what a step changed. If there are any, show them and ask the user what
    to do with them before starting.
 3. **Establish a baseline** before the first step of a plan: the project builds and its existing
-   tests pass. If the baseline is already broken, stop and report it. Otherwise every later
-   failure is ambiguous: was it this step, or was it already broken?
+   tests pass. Ask the verifier for this in `baseline` mode. If the baseline is already broken,
+   stop and report it. Otherwise every later failure is ambiguous: was it this step, or was it
+   already broken? Keep the baseline test counts. They tell you later whether a failing test is
+   new.
 4. Read `CLAUDE.md` for the project's build, test and run commands, and for constraints the
    steps must respect.
 
@@ -65,9 +67,16 @@ the whole scope:
   Propose an adjusted step or a plan change. Do not quietly build something else. The plan the
   user approved is the contract.
 
-**Verify.** Hand the step to the **verifier** with the step's **Verify** and **Done when**
-fields. Verification must produce evidence: command output, test counts, or the result of a
-manual check. "Should work" is not verification.
+**Verify.** Hand the step to the **verifier** in `step` mode, with the plan file path, the step
+number and the files the step changed. Verification must produce evidence: command output, test
+counts, or the result of a manual check. "Should work" is not verification. The verifier
+returns one of three verdicts:
+
+- `PASS`: continue to review.
+- `FAIL`: the code does not do what the step says. Go to the fix loop.
+- `BLOCKED`: verification could not finish for a reason outside the code (database down, tool
+  missing, port taken). This is not something the developer can fix. Stop and tell the user
+  what is needed.
 - When a check can only be done by a person (a desktop UI, a printed document, a real device),
   do not pretend to do it. Put it in the step report as an exact manual check: what to open,
   what to do, what to expect.
@@ -75,8 +84,8 @@ manual check. "Should work" is not verification.
 **Review.** Hand the step's diff to the **reviewer**, together with the step text and the plan's
 constraints. The reviewer judges this step's changes, not the whole codebase.
 
-**Fix loop.** If verification fails, or the review has a 🔴 blocker, send it back to the
-developer with the exact failure and verify again. **At most two fix attempts.** If it still
+**Fix loop.** If verification returns `FAIL`, or the review has a 🔴 blocker, send it back to
+the developer with the exact failure and verify again. **At most two fix attempts.** If it still
 fails, stop and report what was tried and what is failing. A third guess is rarely better than
 asking. 🟡 and ⚪ findings are not fixed automatically. They go in the report for the user to
 decide.
@@ -125,7 +134,7 @@ When every step is `[x]`:
 | Role | How you use it | If it is not available yet |
 |---|---|---|
 | **Developer** | Its skill, for implementing a step | Implement the step yourself, holding to the same rule: the step is the whole scope |
-| **Verifier** | Its subagent, so build and test output stays out of the conversation | Run the step's **Verify** yourself and include the evidence in the report |
+| **Verifier** | The `verifier` subagent (`ai-assistant:verifier`), so build and test output stays out of the conversation. Use its verdict and evidence in the step report as given. Do not upgrade a `FAIL` or `BLOCKED` | Run the step's **Verify** yourself and include the evidence in the report |
 | **Reviewer** | Its subagent, which sees the diff without your reasoning | Say **"Review: not run, no reviewer available"** in the report. Do not review your own work and present it as a review. A self-check is not independent, and the report must not imply that it is |
 
 ## Focus
